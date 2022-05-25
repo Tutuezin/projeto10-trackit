@@ -105,8 +105,7 @@ section {
 }
 body {
   line-height: 1;
-  font-family: 'Roboto', sans-serif;
-  overflow-y: hidden;
+ 
 }
 ol,
 ul {
@@ -130,9 +129,14 @@ table {
 
 * {
   box-sizing: border-box;
+  
 }
 html {
   font-size: 62.5%;
+}
+
+* , html {
+  font-family: 'Lexend Deca', sans-serif;
 }
 
 `;
