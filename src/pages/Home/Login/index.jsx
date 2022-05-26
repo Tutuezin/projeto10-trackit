@@ -1,21 +1,47 @@
 import { Container, TelaLogin, Form } from "./style";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import logo from "../../../assets/imgs/logoTrackit.svg";
+import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loader, setLoader] = useState("Entrar");
+  const [disable, setDisable] = useState(false);
 
   const signIn = (e) => {
+    e.preventDefault();
+
     const body = {
       email,
       password,
     };
-
     console.log(body);
+
+    const promise = axios.post(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login",
+      body
+    );
+    promise
+      .then((res) => {
+        console.log(res.data);
+        setLoader(<ThreeDots color="white" />);
+        setDisable(true);
+        navigate("/habitos");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setLoader(<ThreeDots color="white" />);
+        setDisable(true);
+        alert(err.response.data.message);
+        setLoader("Entrar");
+        setDisable(false);
+        setPassword("");
+      });
   };
   return (
     <Container>
@@ -24,20 +50,22 @@ export default function Login() {
 
         <Form onSubmit={signIn}>
           <input
-            type="text"
+            disabled={disable}
+            type="email"
             placeholder="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
+            disabled={disable}
             type="password"
             placeholder="senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Entrar</button>
+          <button type="submit">{loader}</button>
         </Form>
 
         <p onClick={() => navigate("/cadastro")}>

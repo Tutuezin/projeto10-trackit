@@ -49,6 +49,9 @@ export const Form = styled.form`
   }
 
   button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     height: 4.5rem;
     width: 30.3rem;
@@ -59,5 +62,9 @@ export const Form = styled.form`
     border-radius: 0.4rem;
     border: none;
     background-color: #52b6ff;
+
+    svg {
+      height: 1rem;
+    }
   }
 `;

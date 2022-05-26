@@ -1,6 +1,7 @@
 import { Container, TelaCadastro, Form } from "./style";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
 import logo from "../../../assets/imgs/logoTrackit.svg";
 
@@ -11,6 +12,8 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [picture, setPicture] = useState("");
+  const [loader, setLoader] = useState("Cadastrar");
+  const [disable, setDisable] = useState(false);
 
   const signUp = (e) => {
     e.preventDefault();
@@ -30,11 +33,17 @@ export default function Register() {
     promise
       .then((res) => {
         console.log(res.data);
+        setDisable(true);
+        setLoader(<ThreeDots color="white" />);
         navigate("/");
       })
       .catch((err) => {
         console.log(err.message);
+        setLoader(<ThreeDots color="white" />);
+        setDisable(true);
         alert(err.response.data.message);
+        setLoader("Cadastrar");
+        setDisable(false);
       });
   };
 
@@ -45,13 +54,16 @@ export default function Register() {
 
         <Form onSubmit={signUp}>
           <input
+            disabled={disable}
             type="email"
             placeholder="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+
           <input
+            disabled={disable}
             type="password"
             placeholder="senha"
             value={password}
@@ -59,6 +71,7 @@ export default function Register() {
             required
           />
           <input
+            disabled={disable}
             type="text"
             placeholder="nome"
             value={name}
@@ -66,13 +79,14 @@ export default function Register() {
             required
           />
           <input
+            disabled={disable}
             type="text"
             placeholder="foto"
             value={picture}
             onChange={(e) => setPicture(e.target.value)}
             required
           />
-          <button type="submit">Cadastrar</button>
+          {<button type="submit">{loader}</button>}
         </Form>
 
         <p onClick={() => navigate("/")}>Já tem uma conta? Faça login!</p>
