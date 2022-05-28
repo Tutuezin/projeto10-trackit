@@ -8,11 +8,12 @@ import Habits from "./pages/Habits";
 
 function App() {
   const [token, setToken] = useState("");
+  const [picture, setPicture] = useState("");
 
   return (
     <>
       <GlobalStyle />
-      <UserContext.Provider value={{ token, setToken }}>
+      <UserContext.Provider value={{ token, setToken, picture, setPicture }}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Login />} />

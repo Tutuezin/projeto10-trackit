@@ -5,10 +5,45 @@ import Header from "./components/Header";
 import UserContext from "../../contexts/UserContext";
 import axios from "axios";
 
+function Day({ nameDay, toggleDay, nmrDay }) {
+  const [isSelected, setIsSelected] = useState(true);
+
+  return (
+    <>
+      <Li
+        onClick={() => {
+          setIsSelected(!isSelected);
+          toggleDay(nmrDay, isSelected);
+        }}
+        isSelected={isSelected}
+      >
+        {nameDay}
+      </Li>
+    </>
+  );
+}
+
 export default function Habits() {
   const { token } = useContext(UserContext);
 
   const [addForm, setAddForm] = useState(false);
+  const [daysSelecteds, setDaysSelecteds] = useState([]);
+  const [habitName, setHabitName] = useState("");
+
+  useEffect(() => console.log(daysSelecteds), [daysSelecteds]);
+
+  const toggleDay = (nmrDay, isSelected) => {
+    if (isSelected) {
+      const arrayDays = [...daysSelecteds, nmrDay];
+      setDaysSelecteds(arrayDays);
+    } else {
+      const arrayDays = daysSelecteds.filter((nmr) => {
+        if (nmr !== nmrDay) return true;
+        return false;
+      });
+      setDaysSelecteds(arrayDays);
+    }
+  };
 
   useEffect(() => {
     const config = {
@@ -26,6 +61,17 @@ export default function Habits() {
       .catch((err) => console.log(err.message));
   }, []);
 
+  const sendHabit = (e) => {
+    e.preventDefault();
+    const body = {
+      name: habitName,
+      days: daysSelecteds,
+    };
+    console.log(body);
+  };
+  console.log(daysSelecteds);
+  console.log(habitName);
+
   return (
     <>
       <BodyStyle />
@@ -39,18 +85,23 @@ export default function Habits() {
         </MyHabits>
 
         <CreateHabit addForm={addForm}>
-          <Form>
-            <input type="text" placeholder="nome do hábito" />
+          <Form onSubmit={sendHabit}>
+            <input
+              type="text"
+              placeholder="nome do hábito"
+              value={habitName}
+              onChange={({ target }) => setHabitName(target.value)}
+            />
 
-            <li className="days">
-              <ul>D</ul>
-              <ul>S</ul>
-              <ul>T</ul>
-              <ul>Q</ul>
-              <ul>Q</ul>
-              <ul>S</ul>
-              <ul>S</ul>
-            </li>
+            <ul className="days">
+              <Day toggleDay={toggleDay} nameDay={"D"} nmrDay={0} />
+              <Day toggleDay={toggleDay} nameDay={"S"} nmrDay={1} />
+              <Day toggleDay={toggleDay} nameDay={"T"} nmrDay={2} />
+              <Day toggleDay={toggleDay} nameDay={"Q"} nmrDay={3} />
+              <Day toggleDay={toggleDay} nameDay={"Q"} nmrDay={4} />
+              <Day toggleDay={toggleDay} nameDay={"S"} nmrDay={5} />
+              <Day toggleDay={toggleDay} nameDay={"S"} nmrDay={6} />
+            </ul>
 
             <div className="choice">
               <h4 onClick={() => setAddForm(false)}>cancelar</h4>
@@ -90,6 +141,7 @@ const MyHabits = styled.div`
   }
 
   button {
+    user-select: none;
     cursor: pointer;
 
     width: 4rem;
@@ -116,7 +168,7 @@ const CreateHabit = styled.div`
   background-color: #fff;
 `;
 
-const Form = styled.div`
+const Form = styled.form`
   padding: 1.8rem;
 
   input {
@@ -139,23 +191,6 @@ const Form = styled.div`
   .days {
     display: flex;
     margin-top: 0.8rem;
-
-    ul {
-      cursor: pointer;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      margin-right: 0.4rem;
-      width: 3rem;
-      height: 3rem;
-
-      font-size: 2rem;
-      color: #dbdbdb;
-      border-radius: 0.5rem;
-      border: 1px solid #d4d4d4;
-    }
   }
 
   .choice {
@@ -184,4 +219,23 @@ const Form = styled.div`
       background-color: #52b6ff;
     }
   }
+`;
+
+const Li = styled.li`
+  user-select: none;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-right: 0.4rem;
+  width: 3rem;
+  height: 3rem;
+
+  background-color: ${(props) => (props.isSelected ? "#fff" : "#cfcfcf")};
+  font-size: 2rem;
+  color: ${(props) => (props.isSelected ? "#dbdbdb" : "#fff")};
+  border-radius: 0.5rem;
+  border: 1px solid #d4d4d4;
 `;

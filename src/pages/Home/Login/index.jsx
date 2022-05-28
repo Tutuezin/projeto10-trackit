@@ -9,6 +9,7 @@ import axios from "axios";
 export default function Login() {
   const navigate = useNavigate();
   const { setToken } = useContext(UserContext);
+  const { setPicture } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +33,7 @@ export default function Login() {
         console.log(res.data);
         setLoader(<ThreeDots color="white" />);
         setToken(res.data.token);
+        setPicture(res.data.image);
         setDisable(true);
         navigate("/habitos");
       })
