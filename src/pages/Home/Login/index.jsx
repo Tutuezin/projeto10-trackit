@@ -1,12 +1,14 @@
 import { Container, TelaLogin, Form } from "./style";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import UserContext from "../../../contexts/UserContext";
 import logo from "../../../assets/imgs/logoTrackit.svg";
 import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setToken } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +22,6 @@ export default function Login() {
       email,
       password,
     };
-    console.log(body);
 
     const promise = axios.post(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login",
@@ -30,6 +31,7 @@ export default function Login() {
       .then((res) => {
         console.log(res.data);
         setLoader(<ThreeDots color="white" />);
+        setToken(res.data.token);
         setDisable(true);
         navigate("/habitos");
       })
