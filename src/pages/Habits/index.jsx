@@ -2,33 +2,21 @@ import React, { useState, useEffect, useContext } from "react";
 import BodyStyle from "../../assets/css/BodyStyle";
 import styled from "styled-components";
 import Header from "./components/Header";
+import Day from "./components/Day";
 import UserContext from "../../contexts/UserContext";
 import axios from "axios";
 
-function Day({ nameDay, toggleDay, nmrDay }) {
-  const [isSelected, setIsSelected] = useState(true);
-
-  return (
-    <>
-      <Li
-        onClick={() => {
-          setIsSelected(!isSelected);
-          toggleDay(nmrDay, isSelected);
-        }}
-        isSelected={isSelected}
-      >
-        {nameDay}
-      </Li>
-    </>
-  );
-}
-
 export default function Habits() {
-  const { token } = useContext(UserContext);
-
   const [addForm, setAddForm] = useState(false);
   const [daysSelecteds, setDaysSelecteds] = useState([]);
   const [habitName, setHabitName] = useState("");
+
+  const { token } = useContext(UserContext);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   useEffect(() => console.log(daysSelecteds), [daysSelecteds]);
 
@@ -46,12 +34,6 @@ export default function Habits() {
   };
 
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     const promise = axios.get(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
       config
@@ -67,10 +49,26 @@ export default function Habits() {
       name: habitName,
       days: daysSelecteds,
     };
-    console.log(body);
+
+    const promise = axios.post(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      body,
+      config
+    );
+
+    promise
+      .then((res) => {
+        console.log(res.data);
+        setAddForm(false);
+        setHabitName("");
+        setDaysSelecteds([]);
+      })
+
+      .catch((err) => {
+        console.log(err.message);
+        alert(err.response.data.message);
+      });
   };
-  console.log(daysSelecteds);
-  console.log(habitName);
 
   return (
     <>
@@ -87,6 +85,7 @@ export default function Habits() {
         <CreateHabit addForm={addForm}>
           <Form onSubmit={sendHabit}>
             <input
+              required
               type="text"
               placeholder="nome do hábito"
               value={habitName}
@@ -94,13 +93,48 @@ export default function Habits() {
             />
 
             <ul className="days">
-              <Day toggleDay={toggleDay} nameDay={"D"} nmrDay={0} />
-              <Day toggleDay={toggleDay} nameDay={"S"} nmrDay={1} />
-              <Day toggleDay={toggleDay} nameDay={"T"} nmrDay={2} />
-              <Day toggleDay={toggleDay} nameDay={"Q"} nmrDay={3} />
-              <Day toggleDay={toggleDay} nameDay={"Q"} nmrDay={4} />
-              <Day toggleDay={toggleDay} nameDay={"S"} nmrDay={5} />
-              <Day toggleDay={toggleDay} nameDay={"S"} nmrDay={6} />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"D"}
+                nmrDay={0}
+              />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"S"}
+                nmrDay={1}
+              />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"T"}
+                nmrDay={2}
+              />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"Q"}
+                nmrDay={3}
+              />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"Q"}
+                nmrDay={4}
+              />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"S"}
+                nmrDay={5}
+              />
+              <Day
+                toggleDay={toggleDay}
+                daysSelecteds={daysSelecteds}
+                nameDay={"S"}
+                nmrDay={6}
+              />
             </ul>
 
             <div className="choice">
@@ -219,23 +253,4 @@ const Form = styled.form`
       background-color: #52b6ff;
     }
   }
-`;
-
-const Li = styled.li`
-  user-select: none;
-  cursor: pointer;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-right: 0.4rem;
-  width: 3rem;
-  height: 3rem;
-
-  background-color: ${(props) => (props.isSelected ? "#fff" : "#cfcfcf")};
-  font-size: 2rem;
-  color: ${(props) => (props.isSelected ? "#dbdbdb" : "#fff")};
-  border-radius: 0.5rem;
-  border: 1px solid #d4d4d4;
 `;
