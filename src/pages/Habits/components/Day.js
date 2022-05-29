@@ -10,7 +10,7 @@ export default function Day({
   isChoiced,
 }) {
   const [isSelected, setIsSelected] = useState(true);
-  console.log(isChoiced, nmrDay);
+
   return (
     <>
       <Li

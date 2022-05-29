@@ -30,7 +30,6 @@ export default function Login() {
     );
     promise
       .then((res) => {
-        console.log(res.data);
         setToken(res.data.token);
         setLoader(<ThreeDots color="white" />);
         setDisable(true);

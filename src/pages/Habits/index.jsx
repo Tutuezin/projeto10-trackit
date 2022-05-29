@@ -49,8 +49,6 @@ export default function Habits() {
     }
   };
 
-  console.log(habitsList);
-
   const sendHabit = (e) => {
     e.preventDefault();
     const body = {
@@ -58,14 +56,13 @@ export default function Habits() {
       days: daysSelecteds,
     };
 
-    setHabitsList([...habitsList, body]);
+    setTimeout(() => setHabitsList([...habitsList, body]), 1000);
 
     const promise = axios.post(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
       body,
       config
     );
-
     promise
       .then((res) => {
         setLoarder(<ThreeDots color="white" />);
@@ -78,6 +75,24 @@ export default function Habits() {
       .catch((err) => {
         alert(err.response.data.message);
       });
+  };
+
+  const deleteHabit = (idHabit) => {
+    const promise = axios.delete(
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${idHabit}`,
+      config
+    );
+    promise
+      .then((res) => {
+        console.log(res.data);
+
+        const arrayHabit = habitsList.filter(({ id }) => {
+          if (id !== idHabit) return true;
+          return false;
+        });
+        setHabitsList(arrayHabit);
+      })
+      .catch((err) => console.log(err.message));
   };
 
   return (
@@ -161,19 +176,26 @@ export default function Habits() {
           </Form>
         </CreateHabit>
 
-        {/*     <p>
-          Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
-          começar a trackear!
-        </p> */}
+        {habitsList.length === 0 ? (
+          <p>
+            Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
+            começar a trackear!
+          </p>
+        ) : (
+          <></>
+        )}
 
         <TotalHabits>
           {habitsList.map((habit) => {
             return (
-              <HabitFinished>
+              <HabitFinished key={habit.id}>
                 <div className="habitInfo">
                   <h2>{habit.name}</h2>
 
-                  <button className="trash">
+                  <button
+                    className="trash"
+                    onClick={() => deleteHabit(habit.id)}
+                  >
                     <Trash />
                   </button>
                 </div>
@@ -223,6 +245,7 @@ export default function Habits() {
 
 const Container = styled.div`
   margin-top: 9.1rem;
+  margin-bottom: 8rem;
   padding: 0 1.8rem;
 
   p {
