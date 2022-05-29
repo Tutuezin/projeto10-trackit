@@ -31,11 +31,11 @@ export default function Login() {
     promise
       .then((res) => {
         console.log(res.data);
-        setLoader(<ThreeDots color="white" />);
         setToken(res.data.token);
-        setPicture(res.data.image);
+        setLoader(<ThreeDots color="white" />);
         setDisable(true);
-        navigate("/habitos");
+        setPicture(res.data.image);
+        setTimeout(() => navigate("/habitos"), 1000);
       })
       .catch((err) => {
         console.log(err.message);

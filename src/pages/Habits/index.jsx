@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
 import BodyStyle from "../../assets/css/BodyStyle";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import UserContext from "../../contexts/UserContext";
 import Header from "./components/Header";
 import Day from "./components/Day";
-import UserContext from "../../contexts/UserContext";
-import axios from "axios";
+import DayFinished from "./components/DayFinished";
+import Footer from "./components/Footer";
+import { ThreeDots } from "react-loader-spinner";
+import { ReactComponent as Trash } from "../../assets/imgs/delete.svg";
 
 export default function Habits() {
   const [addForm, setAddForm] = useState(false);
   const [daysSelecteds, setDaysSelecteds] = useState([]);
   const [habitName, setHabitName] = useState("");
+  const [loader, setLoarder] = useState("Salvar");
+  const [habitsList, setHabitsList] = useState([]);
 
   const { token } = useContext(UserContext);
   const config = {
@@ -18,7 +24,17 @@ export default function Habits() {
     },
   };
 
-  useEffect(() => console.log(daysSelecteds), [daysSelecteds]);
+  useEffect(() => {
+    const promise = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      config
+    );
+    promise
+      .then((res) => {
+        setHabitsList(res.data);
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
 
   const toggleDay = (nmrDay, isSelected) => {
     if (isSelected) {
@@ -33,15 +49,7 @@ export default function Habits() {
     }
   };
 
-  useEffect(() => {
-    const promise = axios.get(
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
-      config
-    );
-    promise
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err.message));
-  }, []);
+  console.log(habitsList);
 
   const sendHabit = (e) => {
     e.preventDefault();
@@ -49,6 +57,8 @@ export default function Habits() {
       name: habitName,
       days: daysSelecteds,
     };
+
+    setHabitsList([...habitsList, body]);
 
     const promise = axios.post(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
@@ -58,14 +68,14 @@ export default function Habits() {
 
     promise
       .then((res) => {
-        console.log(res.data);
-        setAddForm(false);
+        setLoarder(<ThreeDots color="white" />);
+        setTimeout(() => setAddForm(false), 1000);
         setHabitName("");
         setDaysSelecteds([]);
+        setTimeout(() => setLoarder("Salvar"), 1000);
       })
 
       .catch((err) => {
-        console.log(err.message);
         alert(err.response.data.message);
       });
   };
@@ -94,42 +104,49 @@ export default function Habits() {
 
             <ul className="days">
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"D"}
                 nmrDay={0}
               />
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"S"}
                 nmrDay={1}
               />
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"T"}
                 nmrDay={2}
               />
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"Q"}
                 nmrDay={3}
               />
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"Q"}
                 nmrDay={4}
               />
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"S"}
                 nmrDay={5}
               />
               <Day
+                cursor={"pointer"}
                 toggleDay={toggleDay}
                 daysSelecteds={daysSelecteds}
                 nameDay={"S"}
@@ -139,16 +156,67 @@ export default function Habits() {
 
             <div className="choice">
               <h4 onClick={() => setAddForm(false)}>cancelar</h4>
-              <button type="submit">Salvar</button>
+              <button type="submit">{loader}</button>
             </div>
           </Form>
         </CreateHabit>
 
-        <p>
+        {/*     <p>
           Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
           começar a trackear!
-        </p>
+        </p> */}
+
+        <TotalHabits>
+          {habitsList.map((habit) => {
+            return (
+              <HabitFinished>
+                <div className="habitInfo">
+                  <h2>{habit.name}</h2>
+
+                  <button className="trash">
+                    <Trash />
+                  </button>
+                </div>
+                <ul className="days">
+                  <DayFinished
+                    toggleDay={toggleDay}
+                    isChoiced={habit.days.includes(0)}
+                    daysSelecteds={daysSelecteds}
+                    nameDay={"D"}
+                    nmrDay={0}
+                  />
+                  <DayFinished
+                    isChoiced={habit.days.includes(1)}
+                    nameDay={"S"}
+                  />
+                  <DayFinished
+                    isChoiced={habit.days.includes(2)}
+                    nameDay={"T"}
+                  />
+                  <DayFinished
+                    isChoiced={habit.days.includes(3)}
+                    nameDay={"Q"}
+                  />
+                  <DayFinished
+                    isChoiced={habit.days.includes(4)}
+                    nameDay={"Q"}
+                  />
+                  <DayFinished
+                    isChoiced={habit.days.includes(5)}
+                    nameDay={"S"}
+                  />
+                  <DayFinished
+                    isChoiced={habit.days.includes(6)}
+                    nameDay={"S"}
+                  />
+                </ul>
+              </HabitFinished>
+            );
+          })}
+        </TotalHabits>
       </Container>
+
+      <Footer />
     </>
   );
 }
@@ -177,6 +245,7 @@ const MyHabits = styled.div`
   button {
     user-select: none;
     cursor: pointer;
+    margin-bottom: 2.2rem;
 
     width: 4rem;
     height: 3.5rem;
@@ -194,7 +263,6 @@ const MyHabits = styled.div`
 const CreateHabit = styled.div`
   display: ${(props) => (props.addForm ? "default" : "none")};
 
-  margin-top: 2.2rem;
   width: 34rem;
   height: 18rem;
 
@@ -251,6 +319,49 @@ const Form = styled.form`
       border-radius: 0.4rem;
       color: #fff;
       background-color: #52b6ff;
+
+      svg {
+        height: 1rem;
+      }
+    }
+  }
+`;
+
+const TotalHabits = styled.div``;
+
+const HabitFinished = styled.div`
+  margin-top: 1rem;
+  width: 34rem;
+  height: 9.1rem;
+  padding: 1.3rem 1rem 1.5rem 1.5rem;
+
+  border-radius: 0.5rem;
+  background-color: #fff;
+
+  .days {
+    display: flex;
+    margin-top: 0.8rem;
+  }
+
+  .habitInfo {
+    display: flex;
+    justify-content: space-between;
+
+    h2 {
+      font-size: 2rem;
+      color: #666666;
+    }
+
+    .trash {
+      border: none;
+      background-color: #fff;
+
+      svg {
+        cursor: pointer;
+        path {
+          fill: #666666;
+        }
+      }
     }
   }
 `;

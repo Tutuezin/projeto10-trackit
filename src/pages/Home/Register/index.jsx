@@ -35,7 +35,7 @@ export default function Register() {
         console.log(res.data);
         setDisable(true);
         setLoader(<ThreeDots color="white" />);
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000);
       })
       .catch((err) => {
         console.log(err.message);

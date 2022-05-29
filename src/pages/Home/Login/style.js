@@ -37,9 +37,11 @@ export const Form = styled.form`
     height: 4.5rem;
     border-radius: 0.5rem;
     margin-bottom: 0.6rem;
+    font-size: 2rem;
+    color: #666666;
 
     padding-left: 1rem;
-    background: #ffffff;
+    background-color: #fff;
     border: 1px solid #d5d5d5;
 
     &::placeholder {
