@@ -16,6 +16,7 @@ export default function Habits() {
   const [habitName, setHabitName] = useState("");
   const [loader, setLoarder] = useState("Salvar");
   const [habitsList, setHabitsList] = useState([]);
+  const [condicao, setCondicao] = useState(true);
 
   const { token } = useContext(UserContext);
   const config = {
@@ -68,6 +69,7 @@ export default function Habits() {
           setHabitsList([...habitsList, body]);
           setAddForm(false);
           setLoarder("Salvar");
+          setCondicao(false);
         }, 1000);
         setHabitName("");
         setDaysSelecteds([]);
@@ -103,77 +105,86 @@ export default function Habits() {
       <Container>
         <MyHabits>
           <h2>Meus hábitos</h2>
-          <button onClick={() => setAddForm(true)}>+</button>
+          <button
+            onClick={() => {
+              setCondicao(true);
+              setAddForm(true);
+            }}
+          >
+            +
+          </button>
         </MyHabits>
 
-        <CreateHabit addForm={addForm}>
-          <Form onSubmit={sendHabit}>
-            <input
-              required
-              type="text"
-              placeholder="nome do hábito"
-              value={habitName}
-              onChange={({ target }) => setHabitName(target.value)}
-            />
+        {condicao && (
+          <CreateHabit addForm={addForm}>
+            <Form onSubmit={sendHabit}>
+              <input
+                required
+                type="text"
+                placeholder="nome do hábito"
+                value={habitName}
+                onChange={({ target }) => setHabitName(target.value)}
+              />
 
-            <ul className="days">
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"D"}
-                nmrDay={0}
-              />
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"S"}
-                nmrDay={1}
-              />
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"T"}
-                nmrDay={2}
-              />
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"Q"}
-                nmrDay={3}
-              />
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"Q"}
-                nmrDay={4}
-              />
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"S"}
-                nmrDay={5}
-              />
-              <Day
-                cursor={"pointer"}
-                toggleDay={toggleDay}
-                daysSelecteds={daysSelecteds}
-                nameDay={"S"}
-                nmrDay={6}
-              />
-            </ul>
+              <ul className="days">
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"D"}
+                  nmrDay={0}
+                />
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"S"}
+                  nmrDay={1}
+                />
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"T"}
+                  nmrDay={2}
+                />
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"Q"}
+                  nmrDay={3}
+                />
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"Q"}
+                  nmrDay={4}
+                />
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"S"}
+                  nmrDay={5}
+                />
+                <Day
+                  cursor={"pointer"}
+                  toggleDay={toggleDay}
+                  daysSelecteds={daysSelecteds}
+                  nameDay={"S"}
+                  nmrDay={6}
+                />
+              </ul>
 
-            <div className="choice">
-              <h4 onClick={() => setAddForm(false)}>cancelar</h4>
-              <button type="submit">{loader}</button>
-            </div>
-          </Form>
-        </CreateHabit>
+              <div className="choice">
+                <h4 onClick={() => setAddForm(false)}>cancelar</h4>
+                <button type="submit">{loader}</button>
+              </div>
+            </Form>
+          </CreateHabit>
+        )}
 
         {habitsList.length === 0 ? (
           <p>

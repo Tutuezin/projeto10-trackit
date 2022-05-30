@@ -16,7 +16,7 @@ export default function CompletedHabit({ habit }) {
       setHabitDoned((habitDoned) => habitDoned.filter((id) => id !== habit.id));
     }
   };
-  // useEffect(() => console.log(habitDoned), [habitDoned]);
+  useEffect(() => console.log(habitDoned), [habitDoned]);
 
   return (
     <CompletedHabits isDone={isDone}>

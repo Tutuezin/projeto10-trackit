@@ -5,13 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import axios from "axios";
 
 export default function Footer() {
   const navigate = useNavigate();
-  const { habitDoned, habitsToday } = useContext(UserContext);
-  const [percentage, setPercentage] = useState(
-    (habitDoned.length / habitsToday.length) * 100
-  );
+  const { habitDoned, habitsToday, percentage, setPercentage } =
+    useContext(UserContext);
 
   useEffect(() => {
     setPercentage((habitDoned.length / habitsToday.length) * 100);

@@ -9,7 +9,7 @@ export default function Day({
   cursor,
   isChoiced,
 }) {
-  const [isSelected, setIsSelected] = useState(true);
+  const [isSelected, setIsSelected] = useState(false);
 
   return (
     <>
@@ -17,7 +17,7 @@ export default function Day({
         cursor={cursor}
         onClick={() => {
           setIsSelected(!isSelected);
-          toggleDay(nmrDay, isSelected);
+          toggleDay(nmrDay, !isSelected);
         }}
         isChoiced={isChoiced}
         isSelected={isSelected}
@@ -41,11 +41,11 @@ const Li = styled.li`
   width: 3rem;
   height: 3rem;
 
-  background-color: ${({ isSelected, daysSelecteds, isChoiced }) =>
-    isSelected || daysSelecteds.length === 0 ? "#fff" : "#cfcfcf"};
+  background-color: ${({ isSelected, daysSelecteds }) =>
+    !isSelected || daysSelecteds.length === 0 ? "#fff" : "#cfcfcf"};
   font-size: 2rem;
   color: ${({ isSelected, daysSelecteds, isChoiced }) =>
-    isSelected || daysSelecteds.length === 0 ? "#dbdbdb" : "#fff"};
+    !isSelected || daysSelecteds.length === 0 ? "#dbdbdb" : "#fff"};
   border-radius: 0.5rem;
   border: 1px solid #d4d4d4;
 `;

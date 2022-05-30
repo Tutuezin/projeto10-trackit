@@ -3,12 +3,32 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CompletedHabit from "../components/CompletedHabit";
-import { useState, useEffect, useContext } from "react";
+import { useContext, useEffect } from "react";
 import UserContext from "../../contexts/UserContext";
 import axios from "axios";
 
 export default function Today() {
-  const { habitsToday } = useContext(UserContext);
+  const { habitsToday, percentage, setHabitsToday, token } =
+    useContext(UserContext);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  useEffect(() => {
+    const promise = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
+      config
+    );
+    promise
+      .then((res) => {
+        console.log(res.data);
+        setHabitsToday(res.data);
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
 
   const dia = new Date();
 
@@ -30,7 +50,12 @@ export default function Today() {
           {weekDays[dia.getDay()]}, {dia.getDate()}/
           {dia.getMonth() < 10 ? `0${dia.getMonth() + 1}` : dia.getMonth()}
         </h2>
-        <p>Nenhum hábito concluído ainda</p>
+
+        {percentage === 0 ? (
+          <p>Nenhum hábito concluído ainda</p>
+        ) : (
+          <p>{percentage.toFixed()}% dos hábitos concluídos</p>
+        )}
 
         {habitsToday.map((habit, index) => {
           return <CompletedHabit key={index} habit={habit} />;
