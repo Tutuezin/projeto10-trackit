@@ -1,22 +1,37 @@
-import React, { useEffect } from "react";
 import styled from "styled-components";
 import UserContext from "../../contexts/UserContext";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ReactComponent as CompletedButton } from "../../assets/imgs/completedButton.svg";
+import axios from "axios";
 
 export default function CompletedHabit({ habit }) {
   const [isDone, setIsDone] = useState(habit.done);
-  const { setHabitDoned, habitDoned } = useContext(UserContext);
+  const { setHabitDoned, habitDoned, token } = useContext(UserContext);
 
   const toggleDone = () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     setIsDone(!isDone);
-    if (!isDone) {
+    if (isDone) {
       setHabitDoned((habitDoned) => [...habitDoned, habit.id]);
     } else {
       setHabitDoned((habitDoned) => habitDoned.filter((id) => id !== habit.id));
     }
+
+    const promise = axios.get(
+      `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habit.id}/check`,
+      config
+    );
+    promise
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err.message));
   };
-  useEffect(() => console.log(habitDoned), [habitDoned]);
+
+  // useEffect(() => console.log(habitDoned), [habitDoned]);
 
   return (
     <CompletedHabits isDone={isDone}>

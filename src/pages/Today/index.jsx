@@ -24,7 +24,6 @@ export default function Today() {
     );
     promise
       .then((res) => {
-        console.log(res.data);
         setHabitsToday(res.data);
       })
       .catch((err) => console.log(err.message));
