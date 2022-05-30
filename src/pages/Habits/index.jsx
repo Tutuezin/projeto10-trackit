@@ -56,8 +56,6 @@ export default function Habits() {
       days: daysSelecteds,
     };
 
-    setTimeout(() => setHabitsList([...habitsList, body]), 1000);
-
     const promise = axios.post(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
       body,
@@ -66,10 +64,13 @@ export default function Habits() {
     promise
       .then((res) => {
         setLoarder(<ThreeDots color="white" />);
-        setTimeout(() => setAddForm(false), 1000);
+        setTimeout(() => {
+          setHabitsList([...habitsList, body]);
+          setAddForm(false);
+          setLoarder("Salvar");
+        }, 1000);
         setHabitName("");
         setDaysSelecteds([]);
-        setTimeout(() => setLoarder("Salvar"), 1000);
       })
 
       .catch((err) => {

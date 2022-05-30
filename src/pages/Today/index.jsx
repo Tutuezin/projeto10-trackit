@@ -8,27 +8,7 @@ import UserContext from "../../contexts/UserContext";
 import axios from "axios";
 
 export default function Today() {
-  const [habitsToday, setHabitsToday] = useState([]);
-
-  const { token } = useContext(UserContext);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  useEffect(() => {
-    const promise = axios.get(
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
-      config
-    );
-    promise
-      .then((res) => {
-        console.log(res.data);
-        setHabitsToday(res.data);
-      })
-      .catch((err) => console.log(err.message));
-  }, []);
+  const { habitsToday } = useContext(UserContext);
 
   const dia = new Date();
 

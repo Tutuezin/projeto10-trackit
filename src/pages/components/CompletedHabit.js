@@ -1,15 +1,22 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useState } from "react";
+import UserContext from "../../contexts/UserContext";
+import { useState, useContext } from "react";
 import { ReactComponent as CompletedButton } from "../../assets/imgs/completedButton.svg";
 
 export default function CompletedHabit({ habit }) {
   const [isDone, setIsDone] = useState(habit.done);
+  const { setHabitDoned, habitDoned } = useContext(UserContext);
 
   const toggleDone = () => {
     setIsDone(!isDone);
+    if (!isDone) {
+      setHabitDoned((habitDoned) => [...habitDoned, habit.id]);
+    } else {
+      setHabitDoned((habitDoned) => habitDoned.filter((id) => id !== habit.id));
+    }
   };
-  useEffect(() => console.log(isDone), [isDone]);
+  // useEffect(() => console.log(habitDoned), [habitDoned]);
 
   return (
     <CompletedHabits isDone={isDone}>
