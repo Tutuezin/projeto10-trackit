@@ -5,6 +5,8 @@ import UserContext from "./contexts/UserContext";
 import Login from "./pages/Home/Login";
 import Register from "./pages/Home/Register";
 import Habits from "./pages/Habits";
+import Today from "./pages/Today";
+import Historic from "./pages/Historic";
 
 function App() {
   const [token, setToken] = useState("");
@@ -19,6 +21,8 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/cadastro" element={<Register />} />
             <Route path="/habitos" element={<Habits />} />
+            <Route path="/hoje" element={<Today />} />
+            <Route path="/historico" element={<Historic />} />
           </Routes>
         </BrowserRouter>
       </UserContext.Provider>

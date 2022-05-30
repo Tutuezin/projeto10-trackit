@@ -3,10 +3,10 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import UserContext from "../../contexts/UserContext";
-import Header from "./components/Header";
-import Day from "./components/Day";
-import DayFinished from "./components/DayFinished";
-import Footer from "./components/Footer";
+import Header from "../components/Header";
+import Day from "../components/Day";
+import DayFinished from "../components/DayFinished";
+import Footer from "../components/Footer";
 import { ThreeDots } from "react-loader-spinner";
 import { ReactComponent as Trash } from "../../assets/imgs/delete.svg";
 
@@ -83,9 +83,7 @@ export default function Habits() {
       config
     );
     promise
-      .then((res) => {
-        console.log(res.data);
-
+      .then(() => {
         const arrayHabit = habitsList.filter(({ id }) => {
           if (id !== idHabit) return true;
           return false;
@@ -186,9 +184,9 @@ export default function Habits() {
         )}
 
         <TotalHabits>
-          {habitsList.map((habit) => {
+          {habitsList.map((habit, index) => {
             return (
-              <HabitFinished key={habit.id}>
+              <HabitFinished key={index}>
                 <div className="habitInfo">
                   <h2>{habit.name}</h2>
 

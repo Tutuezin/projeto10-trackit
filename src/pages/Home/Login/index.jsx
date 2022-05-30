@@ -34,7 +34,7 @@ export default function Login() {
         setLoader(<ThreeDots color="white" />);
         setDisable(true);
         setPicture(res.data.image);
-        setTimeout(() => navigate("/habitos"), 1000);
+        setTimeout(() => navigate("/hoje"), 1000);
       })
       .catch((err) => {
         console.log(err.message);

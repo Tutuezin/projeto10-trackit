@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import trackit from "../../../assets/imgs/trackit.svg";
-import UserContext from "../../../contexts/UserContext";
+import trackit from "../../assets/imgs/trackit.svg";
+import UserContext from "../../contexts/UserContext";
 import { useContext } from "react";
 
 export default function Header() {
